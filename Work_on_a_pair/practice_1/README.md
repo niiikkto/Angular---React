@@ -1,16 +1,148 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# Практическая работа №1 — Основы React: компоненты и props
 
-Currently, two official plugins are available:
+## Описание проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Первая практика по React. Здесь мы учимся создавать **переиспользуемые компоненты** и передавать в них данные через **props**.
 
-## React Compiler
+Цель работы — понять:
+- что такое компонент;
+- как передавать и принимать props;
+- значения по умолчанию (default props);
+- условный рендер;
+- children (вложенное содержимое);
+- как собирать интерфейс из маленьких кусочков.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Что реализовано
 
-## Expanding the Oxlint configuration
+| Задача | Компонент | Что демонстрирует |
+|--------|-----------|-------------------|
+| 1 | `Greeting` | props + значение по умолчанию + fallback |
+| 2 | `Product` | вычисления внутри компонента + условный рендер скидки |
+| 3 | `Avatar` | props для размера + дефолтное значение |
+| 4 | `Card` | children (произвольное содержимое внутри) |
+| 5 | `Button` | варианты стилей, disabled, onClick |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## Технологии
+
+- **React 19**
+- **Vite 8**
+- **JavaScript**
+- Inline-стили
+
+---
+
+## Структура проекта
+
+```
+practice_1/
+├── components/
+│   ├── Greeting.jsx    # Приветствие
+│   ├── Product.jsx     # Карточка товара со скидкой
+│   ├── Avatar.jsx      # Аватар с инициалом
+│   ├── Card.jsx        # Универсальная карточка-обёртка
+│   └── Button.jsx      # Кнопка с вариантами
+├── App.jsx             # Главный компонент (демонстрация всех задач)
+├── main.jsx            # Точка входа
+├── index.css
+├── index.html
+├── package.json
+└── vite.config.js
+```
+
+---
+
+## Установка и запуск
+
+1. Перейдите в папку проекта:
+
+```bash
+cd Work_on_a_pair/practice_1
+```
+
+2. Установите зависимости:
+
+```bash
+npm install
+```
+
+3. Запустите dev-сервер:
+
+```bash
+npm run dev
+```
+
+4. Откройте в браузере адрес, который покажет Vite (обычно `http://localhost:5173`).
+
+### Другие команды
+
+| Команда           | Описание                          |
+|-------------------|-----------------------------------|
+| `npm run build`   | Сборка production-версии          |
+| `npm run preview` | Предпросмотр собранного приложения |
+| `npm run lint`    | Проверка кода (oxlint)            |
+
+---
+
+## Разбор компонентов
+
+### 1. Greeting
+```jsx
+<Greeting name="Иван" />
+<Greeting name="Анна" greeting="Здравствуй" />
+<Greeting />   // → «Привет, гость!»
+```
+- `greeting` имеет значение по умолчанию `'Привет'`
+- если `name` не передан — показывается «гость»
+
+### 2. Product
+```jsx
+<Product title="Ноутбук" price={50000} discount={15} />
+<Product title="Мышь" price={1500} />  // без скидки
+```
+- считает итоговую цену сам
+- блок со старой ценой и процентом скидки появляется **только если** `discount > 0`
+
+### 3. Avatar
+```jsx
+<Avatar name="Анна" size={32} />
+<Avatar name="Пётр" />          // размер по умолчанию 48
+<Avatar name="Мария" size={80} />
+```
+- показывает первую букву имени
+- размер и шрифт зависят от prop `size`
+
+### 4. Card
+```jsx
+<Card title="Заголовок">
+  {/* любое содержимое */}
+  <p>Текст</p>
+  <Button>Кнопка</Button>
+</Card>
+```
+- использует `children` — можно положить внутрь что угодно
+
+### 5. Button
+```jsx
+<Button>Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="danger" onClick={...}>Danger</Button>
+<Button disabled>Отключена</Button>
+```
+- варианты: `primary` (по умолчанию), `secondary`, `danger`
+- поддерживает `disabled` и `onClick`
+
+---
+
+## Чему учит эта практика
+
+1. **Компонент** — это функция, которая возвращает JSX.
+2. **Props** — способ передать данные сверху вниз.
+3. **Значения по умолчанию** — `function Component({ prop = 'значение' })`.
+4. **Условный рендер** — `{условие && <Элемент />}`.
+5. **Children** — содержимое между открывающим и закрывающим тегом компонента.
+6. **Композиция** — большие интерфейсы собираются из маленьких компонентов.
+
+---
