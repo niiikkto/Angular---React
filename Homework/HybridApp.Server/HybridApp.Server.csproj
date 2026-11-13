@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Сюда вставляем таргеты сборки фронтендов (ВНУТРИ тега Project) -->
+  <Target Name="PublishReact" AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="ClientApp/react" Command="npm install" />
+    <Exec WorkingDirectory="ClientApp/react" Command="npm run build" />
+    <ItemGroup>
+      <ReactFiles Include="ClientApp/react/dist/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ReactFiles)" DestinationFolder="$(PublishDir)wwwroot/react/%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="PublishAngular" AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="ClientApp/angular" Command="npm install --legacy-peer-deps" />
+    <Exec WorkingDirectory="ClientApp/angular" Command="npx ng build --configuration production --base-href /angular/" />
+    <ItemGroup>
+      <AngularFiles Include="ClientApp/angular/dist/angular-app/browser/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AngularFiles)" DestinationFolder="$(PublishDir)wwwroot/angular/%(RecursiveDir)" />
+  </Target>
+
+</Project>
